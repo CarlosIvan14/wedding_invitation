@@ -47,7 +47,13 @@ function RSVP() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      const json = await res.json();
+      const text = await res.text();
+      let json = null;
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        throw new Error(`Error del servidor (${res.status}). Intenta de nuevo.`);
+      }
       if (!res.ok) throw new Error(json.error || 'Error al enviar');
       setSubmitted(true);
     } catch (err) {
