@@ -11,7 +11,29 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   try {
-    const { name, guests, attendance } = await request.json();
+    let body: any;
+    
+    if (typeof request.body === 'string') {
+      body = JSON.parse(request.body);
+    } else if (request.body instanceof ReadableStream) {
+      const reader = request.body.getReader();
+      const decoder = new TextDecoder();
+      let bodyText = '';
+      let done = false;
+      
+      while (!done) {
+        const { value, done: streamDone } = await reader.read();
+        if (value) {
+          bodyText += decoder.decode(value, { stream: true });
+        }
+        done = streamDone;
+      }
+      body = JSON.parse(bodyText);
+    } else {
+      body = await request.json();
+    }
+    
+    const { name, guests, attendance } = body;
 
     if (!name || !guests || !attendance) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), {
