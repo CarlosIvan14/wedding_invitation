@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/rsvp.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}
