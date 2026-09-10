@@ -1,45 +1,21 @@
 import { Resend } from 'resend';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export default async function handler(request: Request): Promise<Response> {
+export default async function handler(
+  request: VercelRequest,
+  response: VercelResponse
+) {
   if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    let body: any;
-    
-    if (typeof request.body === 'string') {
-      body = JSON.parse(request.body);
-    } else if (request.body instanceof ReadableStream) {
-      const reader = request.body.getReader();
-      const decoder = new TextDecoder();
-      let bodyText = '';
-      let done = false;
-      
-      while (!done) {
-        const { value, done: streamDone } = await reader.read();
-        if (value) {
-          bodyText += decoder.decode(value, { stream: true });
-        }
-        done = streamDone;
-      }
-      body = JSON.parse(bodyText);
-    } else {
-      body = await request.json();
-    }
-    
-    const { name, guests, attendance } = body;
+    const { name, guests, attendance } = request.body;
 
     if (!name || !guests || !attendance) {
-      return new Response(JSON.stringify({ error: 'Missing required fields' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return response.status(400).json({ error: 'Missing required fields' });
     }
 
     const willAttend = attendance === 'si';
@@ -92,21 +68,12 @@ export default async function handler(request: Request): Promise<Response> {
 
     if (error) {
       console.error('Resend error:', error);
-      return new Response(JSON.stringify({ error: 'Failed to send email' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return response.status(500).json({ error: 'Failed to send email' });
     }
 
-    return new Response(JSON.stringify({ success: true, id: data?.id }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(200).json({ success: true, id: data?.id });
   } catch (err) {
     console.error('RSVP API error:', err);
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return response.status(500).json({ error: 'Internal server error' });
   }
 }
