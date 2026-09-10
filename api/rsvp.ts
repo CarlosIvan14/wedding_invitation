@@ -63,7 +63,7 @@ export default async function handler(request: Request): Promise<Response> {
 
     const { data, error } = await resend.emails.send({
       from: 'Invitación Candy & Agustín <onboarding@resend.dev>',
-      to: ['dg.candy99@gmail.com'],
+      to: ['carlosivanarmenta8@gmail.com'],
       subject: `RSVP: ${name} — ${willAttend ? 'Asiste' : 'No asiste'} (${guestText})`,
       html,
     });
