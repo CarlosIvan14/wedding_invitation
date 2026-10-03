@@ -104,8 +104,15 @@ function App() {
 
     <section className="padrinos">
       <p className="eyebrow">Con gratitud</p><h2>Nuestros padrinos</h2>
-      <p className="names">Reyna Marcela Núñez Cervantes <b>&</b> Gerardo Delgado Gallardo</p>
-      <p>Con cariño y gratitud, les agradecemos por acompañarnos y ser parte de este momento tan importante en nuestras vidas.</p>
+      <div className="sponsor-list">
+        <article><p className="sponsor-role">De velación</p><p className="names">Reina Marcela Núñez Cervantes <b>&</b> Gerardo Delgado Gallardo</p></article>
+        <article><p className="sponsor-role">De anillos</p><p className="names">Nerely Sánchez Solís <b>&</b> José Efrén Tapia Naranjo</p></article>
+        <article><p className="sponsor-role">De arras</p><p className="names">Ximena Pérez Guevara <b>&</b> Eduardo Delgado Gallardo</p></article>
+        <article><p className="sponsor-role">Lazo, Biblia y Rosario</p><p className="names">Ana María Estrada Martínez <b>&</b> José Gallardo Gutiérrez</p></article>
+        <article><p className="sponsor-role">Ramo natural</p><p className="names">Nancy Magali Gallardo Estrada</p></article>
+        <article><p className="sponsor-role">Ramo artificial</p><p className="names">Daniela Medel Barajas</p></article>
+      </div>
+      <p className="sponsor-thanks">Con cariño y gratitud, les agradecemos por acompañarnos y ser parte de este momento tan importante en nuestras vidas.</p>
     </section>
 
     <section className="event ceremony"><p className="eyebrow">Ceremonia religiosa</p><h2>El inicio de<br /><i>nuestro para siempre</i></h2>
