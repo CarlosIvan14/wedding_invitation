@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Admin from './Admin.jsx';
 
 const templeMap = 'https://www.google.com/maps/search/?api=1&query=Templo+del+Se%C3%B1or+de+la+Salud+Puru%C3%A1ndiro+Michoac%C3%A1n';
 const venueMap = 'https://www.google.com/maps/search/?api=1&query=Sal%C3%B3n+El+Molino+Puru%C3%A1ndiro+Michoac%C3%A1n';
@@ -80,6 +81,7 @@ function RSVP() {
 }
 
 function App() {
+  if (window.location.pathname === '/admin' || window.location.pathname === '/admin/') return <Admin />;
   return <main>
     <section className="hero" id="inicio">
       <img src="/images/cover.jpeg" alt="Candy y Agustín" />

@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createRsvp } from './_lib/database';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -12,14 +13,20 @@ export default async function handler(
   }
 
   try {
-    const { name, guests, attendance } = request.body;
+    const { name: rawName, guests: rawGuests, attendance } = request.body || {};
+    const name = typeof rawName === 'string' ? rawName.trim().replace(/\s+/g, ' ') : '';
+    const guests = Number(rawGuests);
 
-    if (!name || !guests || !attendance) {
-      return response.status(400).json({ error: 'Missing required fields' });
+    if (name.length < 2 || name.length > 120 || !Number.isInteger(guests) || guests < 1 || guests > 12 || !['si', 'no'].includes(attendance)) {
+      return response.status(400).json({ error: 'Revisa los datos de tu confirmación.' });
     }
 
     const willAttend = attendance === 'si';
-    const guestText = guests === '1' ? '1 persona' : `${guests} personas`;
+    const guestText = guests === 1 ? '1 persona' : `${guests} personas`;
+    const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[character] || character));
+    const safeName = escapeHtml(name);
+
+    const savedRsvp = await createRsvp({ name, guests, attendance });
 
     const html = `
       <!DOCTYPE html>
@@ -38,7 +45,7 @@ export default async function handler(
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 12px 0; border-bottom: 1px solid #cfd8cf; font-weight: 600; color: #455545; width: 140px;">Nombre:</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #cfd8cf; color: #2b2c28;">${name}</td>
+                <td style="padding: 12px 0; border-bottom: 1px solid #cfd8cf; color: #2b2c28;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding: 12px 0; border-bottom: 1px solid #cfd8cf; font-weight: 600; color: #455545;">Acompañantes:</td>
@@ -59,21 +66,22 @@ export default async function handler(
       </html>
     `;
 
-    const { data, error } = await resend.emails.send({
-      from: 'Invitación Candy & Agustín <onboarding@resend.dev>',
-      to: ['carlosivanarmenta8@gmail.com'],
-      subject: `RSVP: ${name} — ${willAttend ? 'Asiste' : 'No asiste'} (${guestText})`,
-      html,
-    });
-
-    if (error) {
-      console.error('Resend error:', error);
-      return response.status(500).json({ error: 'Failed to send email' });
+    if (process.env.RESEND_API_KEY) {
+      const { error } = await resend.emails.send({
+        from: 'Invitación Candy & Agustín <onboarding@resend.dev>',
+        to: ['carlosivanarmenta8@gmail.com'],
+        subject: `RSVP: ${name} — ${willAttend ? 'Asiste' : 'No asiste'} (${guestText})`,
+        html,
+      });
+      if (error) console.error('Resend error:', error);
     }
 
-    return response.status(200).json({ success: true, id: data?.id });
+    return response.status(200).json({ success: true, id: savedRsvp.id });
   } catch (err) {
     console.error('RSVP API error:', err);
-    return response.status(500).json({ error: 'Internal server error' });
+    const message = err instanceof Error && err.message === 'DATABASE_NOT_CONFIGURED'
+      ? 'El registro de confirmaciones aún se está configurando. Intenta nuevamente en unos minutos.'
+      : 'No se pudo guardar tu confirmación. Intenta de nuevo.';
+    return response.status(503).json({ error: message });
   }
 }
