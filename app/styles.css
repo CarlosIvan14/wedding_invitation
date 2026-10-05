@@ -36,24 +36,28 @@ footer { padding:68px 24px; text-align:center; color:var(--ivory); background:va
 .admin-header .eyebrow { color:var(--gold); }
 .admin-header h1 { font-size:clamp(32px,5vw,48px); margin:8px 0; color:var(--ink); }
 .admin-header > div > p { color:var(--olive); }
-.admin-actions { display:flex; gap:12px; }
-.admin-secondary { padding:12px 20px; border:1px solid var(--gold); background:transparent; color:var(--olive); font:inherit; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border-radius:10px; cursor:pointer; transition:all .25s; }
+.admin-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.admin-secondary { padding:12px 20px; border:1px solid var(--gold); background:transparent; color:var(--olive); font:inherit; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border-radius:10px; cursor:pointer; transition:all .25s; white-space:nowrap; }
 .admin-secondary:hover { background:var(--gold); color:var(--ivory); }
+
 .admin-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:32px; }
-.admin-stats article { padding:24px; background:var(--mist); border:1px solid rgba(162,125,69,.3); border-radius:14px; text-align:center; }
-.admin-stats span { display:block; font:600 11px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); margin-bottom:8px; }
-.admin-stats strong { font:400 clamp(28px,5vw,42px) 'Cormorant Garamond',Georgia,serif; color:var(--ink); }
-.admin-list-heading { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.stat-card { padding:24px; background:var(--mist); border:1px solid rgba(162,125,69,.3); border-radius:14px; text-align:center; position:relative; overflow:hidden; }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:var(--stat-color); }
+.stat-card span { display:block; font:600 11px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); margin-bottom:8px; }
+.stat-card strong { font:400 clamp(28px,5vw,42px) 'Cormorant Garamond',Georgia,serif; color:var(--ink); line-height:1; }
+
+.admin-list-heading { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
 .admin-list-heading h2 { font-size:clamp(24px,3vw,32px); margin:0; color:var(--ink); }
 .admin-list-heading span { color:var(--sage); font-size:14px; }
+
 .admin-table-wrap { overflow-x:auto; border:1px solid rgba(69,85,69,.15); border-radius:12px; }
-.admin-table-wrap table { width:100%; border-collapse:collapse; }
-.admin-table-wrap th,.admin-table-wrap td { padding:16px 20px; text-align:left; border-bottom:1px solid rgba(69,85,69,.1); }
-.admin-table-wrap th { background:var(--mist); font:600 12px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); }
+.admin-table-wrap table { width:100%; border-collapse:collapse; min-width:600px; }
+.admin-table-wrap th,.admin-table-wrap td { padding:16px 20px; text-align:left; border-bottom:1px solid rgba(69,85,69,.1); white-space:nowrap; }
+.admin-table-wrap th { background:var(--mist); font:600 12px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); position:sticky; top:0; z-index:1; }
 .admin-table-wrap td { color:var(--ink); }
 .admin-table-wrap tr:last-child td { border-bottom:none; }
 .admin-table-wrap tr:hover td { background:rgba(244,239,235,.5); }
-.status { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font:600 12px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.08em; }
+.status { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px; font:600 12px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap; }
 .status.si { background:rgba(131,177,140,.15); color:var(--green); }
 .status.no { background:rgba(162,125,69,.15); color:var(--gold); }
 .admin-empty { text-align:center; padding:48px; color:var(--sage); }
@@ -62,5 +66,26 @@ footer { padding:68px 24px; text-align:center; color:var(--ivory); background:va
 .admin-loading { text-align:center; color:var(--sage); font-size:18px; }
 .admin-floating-error { position:fixed; top:24px; right:24px; z-index:100; padding:16px 24px; background:#a52a2a; color:#fff; border-radius:10px; box-shadow:0 12px 24px rgba(165,42,42,.3); font-family:'DM Sans',Arial,sans-serif; }
 
-@media (max-width:700px) { .admin-stats { grid-template-columns:repeat(2,1fr); } .admin-table-wrap th,.admin-table-wrap td { padding:12px; } }
+@media (max-width:900px) {
+  .admin-stats { grid-template-columns:repeat(2,1fr); }
+  .admin-table-wrap th,.admin-table-wrap td { padding:12px 16px; }
+}
+@media (max-width:600px) {
+  .admin-page { padding:24px 16px; }
+  .admin-header { flex-direction:column; align-items:stretch; }
+  .admin-actions { justify-content:flex-start; }
+  .admin-secondary { flex:1; text-align:center; padding:14px; }
+  .admin-stats { grid-template-columns:1fr; gap:12px; }
+  .stat-card { padding:20px; }
+  .admin-table-wrap { border:none; border-radius:0; overflow-x:visible; }
+  .admin-table-wrap table { display:block; min-width:auto; }
+  .admin-table-wrap thead { display:none; }
+  .admin-table-wrap tbody { display:block; }
+  .admin-table-wrap tr { display:block; background:var(--mist); border:1px solid rgba(162,125,69,.3); border-radius:12px; margin-bottom:12px; padding:16px; }
+  .admin-table-wrap td { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(69,85,69,.1); white-space:normal; }
+  .admin-table-wrap td::before { content:attr(data-label); font:600 11px 'DM Sans',Arial,sans-serif; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-right:12px; }
+  .admin-table-wrap tr:last-child td { border-bottom:none; }
+  .admin-table-wrap tr:hover td { background:transparent; }
+  .status { margin-left:auto; }
+}
 @media (prefers-reduced-motion:no-preference) { section { scroll-margin-top:20px; }.framed-photo,.gael-image { animation:rise .9s ease both; } @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } } }

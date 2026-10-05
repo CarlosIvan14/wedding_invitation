@@ -22,14 +22,68 @@ function Login({ onSuccess }) {
   </section></main>;
 }
 
+function StatCard({ label, value, color }) {
+  return (
+    <article className="stat-card" style={{ '--stat-color': color }}>
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </article>
+  );
+}
+
 function Dashboard({ data, reload, onLogout }) {
   const { summary, rsvps } = data;
   return <main className="admin-page"><section className="admin-dashboard">
-    <header className="admin-header"><div><p className="eyebrow">Candy · Agustín · Gael</p><h1>Confirmaciones</h1><p>Actualizado al momento.</p></div><div className="admin-actions"><button className="admin-secondary" onClick={reload}>Actualizar</button><button className="admin-secondary" onClick={onLogout}>Salir</button></div></header>
-    <div className="admin-stats"><article><span>Respuestas</span><strong>{summary.responses}</strong></article><article><span>Asistirán</span><strong>{summary.attending}</strong></article><article><span>Personas confirmadas</span><strong>{summary.guests}</strong></article><article><span>No asistirán</span><strong>{summary.declining}</strong></article></div>
-    <section className="admin-list"><div className="admin-list-heading"><h2>Lista de respuestas</h2><span>{rsvps.length} registros</span></div>
-      {rsvps.length === 0 ? <p className="admin-empty">Aún no hay confirmaciones. Las nuevas respuestas aparecerán aquí.</p> : <div className="admin-table-wrap"><table><thead><tr><th>Invitado</th><th>Personas</th><th>Respuesta</th><th>Recibida</th></tr></thead><tbody>{rsvps.map((rsvp) => <tr key={rsvp.id}><td>{rsvp.name}</td><td>{rsvp.guests}</td><td><span className={`status ${rsvp.attendance}`}>{rsvp.attendance === 'si' ? 'Asistirá' : 'No asistirá'}</span></td><td>{dateFormat.format(new Date(rsvp.created_at))}</td></tr>)}</tbody></table></div>}
-    </section><a href="/" className="admin-back">← Ver invitación pública</a>
+    <header className="admin-header">
+      <div>
+        <p className="eyebrow">Candy · Agustín · Gael</p>
+        <h1>Confirmaciones</h1>
+        <p>Actualizado al momento.</p>
+      </div>
+      <div className="admin-actions">
+        <button className="admin-secondary" onClick={reload}>Actualizar</button>
+        <button className="admin-secondary" onClick={onLogout}>Salir</button>
+      </div>
+    </header>
+    <div className="admin-stats" role="region" aria-label="Resumen de confirmaciones">
+      <StatCard label="Respuestas" value={summary.responses} color="var(--gold)" />
+      <StatCard label="Asistirán" value={summary.attending} color="var(--green)" />
+      <StatCard label="Personas confirmadas" value={summary.guests} color="var(--olive)" />
+      <StatCard label="No asistirán" value={summary.declining} color="var(--gold)" />
+    </div>
+    <section className="admin-list" aria-labelledby="list-heading">
+      <div className="admin-list-heading" id="list-heading">
+        <h2>Lista de respuestas</h2>
+        <span>{rsvps.length} registro{rsvps.length !== 1 ? 's' : ''}</span>
+      </div>
+      {rsvps.length === 0 ? (
+        <p className="admin-empty">Aún no hay confirmaciones. Las nuevas respuestas aparecerán aquí.</p>
+      ) : (
+        <div className="admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Invitado</th>
+                <th>Personas</th>
+                <th>Respuesta</th>
+                <th>Recibida</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rsvps.map((rsvp) => (
+                <tr key={rsvp.id}>
+                  <td data-label="Invitado">{rsvp.name}</td>
+                  <td data-label="Personas">{rsvp.guests}</td>
+                  <td data-label="Respuesta"><span className={`status ${rsvp.attendance}`}>{rsvp.attendance === 'si' ? 'Asistirá' : 'No asistirá'}</span></td>
+                  <td data-label="Recibida">{dateFormat.format(new Date(rsvp.created_at))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+    <a href="/" className="admin-back">← Ver invitación pública</a>
   </section></main>;
 }
 
