@@ -53,7 +53,7 @@ export async function createRsvp(input: {
   name: string;
   guests: number;
   attendance: Attendance;
-}) {
+}): Promise<RsvpRecord> {
   await ensureTable();
   const sql = getSql();
   const rows = await sql`
@@ -61,15 +61,16 @@ export async function createRsvp(input: {
     VALUES (${input.name}, ${input.guests}, ${input.attendance})
     RETURNING id, name, guests, attendance, created_at
   `;
-  return rows[0];
+  return rows[0] as RsvpRecord;
 }
 
-export async function getRsvps() {
+export async function getRsvps(): Promise<RsvpRecord[]> {
   await ensureTable();
   const sql = getSql();
-  return sql`
+  const rows = await sql`
     SELECT id, name, guests, attendance, created_at
     FROM rsvps
     ORDER BY created_at DESC
   `;
+  return rows as RsvpRecord[];
 }
