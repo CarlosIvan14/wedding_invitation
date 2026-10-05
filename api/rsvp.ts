@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createRsvp } from './_lib/database';
+import { createRsvp } from './_lib/database.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

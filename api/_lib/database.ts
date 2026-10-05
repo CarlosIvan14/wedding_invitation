@@ -56,7 +56,7 @@ export async function createRsvp(input: {
 }) {
   await ensureTable();
   const sql = getSql();
-  const rows = await sql<RsvpRecord[]>`
+  const rows = await sql`
     INSERT INTO rsvps (name, guests, attendance)
     VALUES (${input.name}, ${input.guests}, ${input.attendance})
     RETURNING id, name, guests, attendance, created_at
@@ -67,7 +67,7 @@ export async function createRsvp(input: {
 export async function getRsvps() {
   await ensureTable();
   const sql = getSql();
-  return sql<RsvpRecord[]>`
+  return sql`
     SELECT id, name, guests, attendance, created_at
     FROM rsvps
     ORDER BY created_at DESC

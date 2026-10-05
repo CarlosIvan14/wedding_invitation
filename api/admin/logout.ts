@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { clearSessionCookie } from '../_lib/admin-session';
+import { clearSessionCookie } from '../_lib/admin-session.js';
 
 export default function handler(request: VercelRequest, response: VercelResponse) {
   if (request.method !== 'POST') return response.status(405).json({ error: 'Método no permitido.' });
