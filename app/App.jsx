@@ -132,6 +132,8 @@ function App() {
 
     <section className="padrinos pale"><p className="eyebrow">Con amor y fe</p><h2>Sus padrinos</h2>
       <p className="names">Antonio Maldonado López <b>&</b> Dulce Belén Reyes Cortés</p>
+      <hr></hr>
+      <hr></hr>
       <p>Que Dios bendiga siempre su corazón por aceptar la hermosa misión de acompañarlo en su camino de fe.</p>
     </section>
 
