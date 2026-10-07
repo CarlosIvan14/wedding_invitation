@@ -69,7 +69,7 @@ export default async function handler(
     if (process.env.RESEND_API_KEY) {
       const { error } = await resend.emails.send({
         from: 'Invitación Candy & Agustín <onboarding@resend.dev>',
-        to: ['carlosivanarmenta8@gmail.com'],
+        to: ['dg.candy99@gmail.com'],
         subject: `RSVP: ${name} — ${willAttend ? 'Asiste' : 'No asiste'} (${guestText})`,
         html,
       });

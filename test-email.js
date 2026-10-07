@@ -18,7 +18,7 @@ async function testEmail() {
 
     const { data, error } = await resend.emails.send({
       from: 'Invitación Candy & Agustín <onboarding@resend.dev>',
-      to: ['carlosivanarmenta8@gmail.com'],
+      to: ['dg.candy99@gmail.com'],
       subject: `RSVP: ${testData.name} — ${testData.attendance === 'si' ? 'Asiste' : 'No asiste'} (${testData.guests} personas)`,
       html: `
         <!DOCTYPE html>
